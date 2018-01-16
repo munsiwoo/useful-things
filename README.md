@@ -2,4 +2,4 @@
 
 ## what is small things?
 
-> Things you've created to use when you need it.
+> things you've created to use when i need it.
