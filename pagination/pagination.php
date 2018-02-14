@@ -7,7 +7,7 @@ function pagination($page, $limit, $count) {
 	for($x = ($page-1); ($x%$limit) != 0; --$x);
 	
 	if(($page-1) >= $limit) {
-		echo "<a href=\"?page=".(string)($x)."\">&lt;Prev</a> ";
+		echo "<a href=\"?page={$x}\">&lt;Prev</a> ";
 	}
 
 	$limit = (($x+$limit) > $count) ? $count : $x+$limit;
