@@ -10,7 +10,7 @@ if(isset($_GET['shellmode'])) {
 	$im  = imagecreatefrompng("console.png");
 	$black = imagecolorallocate($im, 0, 0, 0);
 	$white = imagecolorallocate($im, 255, 255, 255);
-	$font = 'NanumGothic.ttf'; // http://hangeul.naver.com/font
+	$font = './NanumGothic.ttf'; // http://hangeul.naver.com/font
 
 	$top = "SiwooMun Image Shell [Version 10.0.14393]\n(c) 2018 SiwooMun. All rights reversed.";
 
@@ -27,6 +27,7 @@ if(isset($_GET['shellmode'])) {
 
 	imagepng($im);
 	imagedestroy($im);
+	exit;
 }
 
 ?>
