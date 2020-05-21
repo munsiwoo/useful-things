@@ -1,0 +1,89 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <title>Python request maker</title>
+    <style>
+        .input_form_sm {
+            width: 600px;
+            height: 30px;
+            padding: 8px 14px 8px 14px;
+            border: #cdcdcd 0.5px solid;
+            border-radius: 15px;
+            font-family: "Bitstream Vera Sans Mono";
+            font-size: 12px;
+            outline: 0;
+            margin-bottom: 5px;
+        }
+        .input_form_bg { 
+            height: 140px;
+            width: 600px;
+            padding: 8px 14px 8px 14px;
+            border: #cdcdcd 0.5px solid;
+            border-radius: 15px;
+            font-family: "Bitstream Vera Sans Mono";
+            font-size: 12px;
+            outline: 0;
+            margin-bottom: 5px;
+        }
+        #result {
+            height: 200px;
+            width: 600px;
+            padding: 8px 14px 8px 14px;
+            border: #77ff80 3px solid;
+            border-radius: 15px;
+            font-family: "Bitstream Vera Sans Mono";
+            font-size: 12px;
+            outline: 0;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body onload="make_code()">
+<script>
+    // made by munsiwoo
+    function make_code() {
+        let req_url = document.querySelector('#req_url').value;
+        let headers = document.querySelector('#headers').value;
+        let data = document.querySelector('#data').value;
+
+        req_url = new URL(req_url).href
+        result = `import requests\n\nurl = "${req_url}"\n`
+        
+        headers = headers.replace(/(")/g, '\\$1');
+        headers = headers.replace(/\:\s/g, '": "');
+        headers = headers.replace(/\n/g, '",\n    "');
+        result += `headers = {\n    "${headers}"\n}\n`;
+
+        data = data.replace(/(")/g, '\\$1');
+        data = data.replace(/\:\s/g, '": "');
+        data = data.replace(/\n/g, '",\n    "');
+        result += `data = {\n    "${data}"\n}\n`;
+
+        result += "requests.post(url, headers=headers, data=data)";
+        document.querySelector("#result").value = result;
+    }
+    function copy_code() {
+        document.getElementById("result").select();
+        document.execCommand('copy');
+        alert('copied!');
+    }
+</script>
+<h2>Python request maker</h2>
+<textarea class="input_form_sm" placeholder="request url" id="req_url" onkeyup="make_code()">http://localhost/login.php?foo=1</textarea>
+<br>
+<textarea class="input_form_bg" placeholder="header value" id="headers" onkeyup="make_code()">User-Agent: browser
+Pragma: no-cache
+Host: localhost
+Accept-Language: ko-KR
+Accept-Encoding: gzip, deflate
+Content-Type: application/x-www-form-urlencoded</textarea>
+<br>
+<textarea class="input_form_bg" style="height: 80px;" placeholder="data value" id="data" onkeyup="make_code()">username: admin
+password: admin</textarea>
+<br>
+
+<textarea id="result"></textarea><br>
+<button onclick="copy_code()" style="font-size: 18px; width: 140px;">Copy code</button>
+</body>
+</html>
