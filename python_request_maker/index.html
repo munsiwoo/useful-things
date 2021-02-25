@@ -50,12 +50,12 @@
         req_url = new URL(req_url).href
         result = `import requests\n\nurl = "${req_url}"\n`
         
-        headers = headers.replace(/(")/g, '\\$1');
+        headers = headers.replace(/("|\\)/g, '\\$1');
         headers = headers.replace(/\:\s/g, '": "');
         headers = headers.replace(/\n/g, '",\n    "');
         result += `headers = {\n    "${headers}"\n}\n`;
 
-        data = data.replace(/(")/g, '\\$1');
+        data = data.replace(/("|\\)/g, '\\$1');
         data = data.replace(/\:\s/g, '": "');
         data = data.replace(/\n/g, '",\n    "');
         result += `data = {\n    "${data}"\n}\n`;
