@@ -6,7 +6,7 @@
     <style>
         .input_form_sm {
             width: 600px;
-            height: 30px;
+            height: 35px;
             padding: 8px 14px 8px 14px;
             border: #cdcdcd 0.5px solid;
             border-radius: 15px;
@@ -41,14 +41,18 @@
 </head>
 <body onload="make_code()">
 <script>
-    // made by munsiwoo
-    function make_code() {
+    function make_code() { 
+        let method = document.querySelector("[name=method]:checked").value;
         let req_url = document.querySelector('#req_url').value;
         let headers = document.querySelector('#headers').value;
         let data = document.querySelector('#data').value;
+        let data_args = (method == 'get') ? 'params' : 'data';
+        let allow_redirects = document.querySelector("#redirects").checked ? 'True' : 'False';
 
-        req_url = new URL(req_url).href
-        result = `import requests\n\nurl = "${req_url}"\n`
+        req_url = new URL(req_url).href;
+        result = `import requests\n`;
+        result += `requests.packages.urllib3.disable_warnings(\n\trequests.packages.urllib3.exceptions.InsecureRequestWarning\n)\n\n`;
+        result += `url = "${req_url}"\n`;
         
         headers = headers.replace(/("|\\)/g, '\\$1');
         headers = headers.replace(/\:\s/g, '": "');
@@ -60,7 +64,8 @@
         data = data.replace(/\n/g, '",\n    "');
         result += `data = {\n    "${data}"\n}\n`;
 
-        result += "requests.post(url, headers=headers, data=data)";
+        result += `r = requests.${method}(url, headers=headers, ${data_args}=data, allow_redirects=${allow_redirects}, verify=False)\n`;
+        result += `print(r.content, flush=True)`;
         document.querySelector("#result").value = result;
     }
     function copy_code() {
@@ -70,14 +75,21 @@
     }
 </script>
 <h2>Python request maker</h2>
-<textarea class="input_form_sm" placeholder="request url" id="req_url" onkeyup="make_code()">http://localhost/login.php?foo=1</textarea>
+
+<div style="margin-bottom: 10px;">
+<input type="radio" name="method" value="get" onclick="make_code()" checked><small>GET</small>
+<input type="radio" name="method" value="post" onclick="make_code()"><small>POST</small>
 <br>
-<textarea class="input_form_bg" placeholder="header value" id="headers" onkeyup="make_code()">User-Agent: browser
-Pragma: no-cache
-Host: localhost
-Accept-Language: ko-KR
-Accept-Encoding: gzip, deflate
-Content-Type: application/x-www-form-urlencoded</textarea>
+<input type="checkbox" id="redirects" onclick="make_code()" checked><small>Follow redirects</small>
+</div>
+
+<textarea class="input_form_sm" placeholder="request url" id="req_url" onkeyup="make_code()">https://withphp.com/</textarea>
+<br>
+<textarea class="input_form_bg" placeholder="header value" id="headers" onkeyup="make_code()">Host: withphp.com
+Cache-control: no-cache
+Content-Type: application/x-www-form-urlencoded
+User-Agent: prm
+Accept: */*</textarea>
 <br>
 <textarea class="input_form_bg" style="height: 80px;" placeholder="data value" id="data" onkeyup="make_code()">username: admin
 password: admin</textarea>
